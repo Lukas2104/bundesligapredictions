@@ -12,7 +12,14 @@ def createPredictionsTable():
 def createFixtureTable():
     cur.execute("CREATE TABLE currFixtures(id, home, away)")
 
+def rename():
+    """
+    cur.execute("ALTER TABLE currPredictions RENAME COLUMN home TO homePercent")
+    cur.execute("ALTER TABLE currPredictions RENAME COLUMN away TO awayPercent")
+    """
+    cur.execute("ALTER TABLE currPredictions RENAME COLUMN draw TO drawPercent")
 
-createPredictionsTable()
-createFixtureTable()
+
+
+rename()
 

@@ -76,27 +76,47 @@ def getCurrPredictions():
         data = res.read().decode("utf-8")
         response = json.loads(data)["response"][0]
         prediction = response["predictions"]
-        predictionData = (i, prediction["winner"]["name"], prediction["goals"]["home"], prediction["goals"]["away"], prediction["percent"]["home"], prediction["percent"]["draw"], prediction["percent"]["away"])
+        predictionData = (i, prediction["winner"]["name"], prediction["goals"]["home"], prediction["goals"]["away"], str(prediction["percent"]["home"]), str(prediction["percent"]["draw"]), str(prediction["percent"]["away"]))
+        print(predictionData)
         teams = response["teams"]
         teamsData = (i, teams["home"]["name"], teams["away"]["name"])
         try:
-            cursor.execute("INSERT INTO currPredictions VALUES(?, ?, ?, ?, ?, ?, ?", predictionData)
+            cursor.execute("INSERT INTO currPredictions VALUES(?, ?, ?, ?, ?, ?, ?)", predictionData)
             connection.commit()
-            print("success (predicitons)")
+            print("success (predictions)")
         except:
             print("failed (predictions)")
+        """
         try:
             cursor.execute("INSERT INTO currFixtures VALUES(?, ?, ?)", teamsData)
             connection.commit()
             print("success (fixtures)")
         except:
             print("failed (fixtures)")
+        """
 
 def test():
-    data = ("871307", "VfB Stuttgart", "FSV Mainz 05")
-    cursor.execute("INSERT INTO currFixtures VALUES(?, ?, ?)", data)
-    connection.commit()
-
+    predictionData = (871307, 'VfB stuttgart', '-2.5', '-2.5', '45%', '45%', '10%')
+    try: 
+        cursor.execute("INSERT INTO currPredictions VALUES(?, ?, ?, ?, ?, ?, ?)", predictionData)
+        connection.commit()
+        print("success")
+    except:
+        print("failed")
+    """
+    fixture = "871307"
+    path = "/predictions?fixture="+fixture
+    conn.request("GET", path, headers=headers)
+    res = conn.getresponse()
+    data = res.read().decode("utf-8")
+    prediction = json.loads(data)["response"][0]["predictions"]
+    print(prediction["winner"]["name"])
+    print(prediction["goals"]["home"])
+    print(prediction["goals"]["away"])
+    print(prediction["percent"]["home"])
+    print(prediction["percent"]["draw"])
+    print(prediction["percent"]["away"])
+    """
 
 test()
 
